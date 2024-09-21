@@ -39,7 +39,7 @@
         </div>
 
         <div class="glassmorphic p-6">
-            <p class="mb-2">Cost per $NTU token: <span id="cost">-</span></p>
+{#            <p class="mb-2">Cost per $NTU token: <span id="cost">-</span></p>#}
             <p class="mb-2">Max Mint Amount: <span id="maxMintAmount">-</span></p>
             <p class="mb-2">Current Supply: <span id="totalSupply">-</span> / <span id="maxSupply">-</span></p>
             <div class="flex items-center">
@@ -1016,7 +1016,6 @@
                 m_account = hide_addr(account, 6, 5)
 
                 document.getElementById('connectButton').innerText = `Connected: ${m_account}`;
-
                 // Initialize contract
                 contract = new web3.eth.Contract(contractABI, contractAddress);
 
@@ -1025,12 +1024,11 @@
                 Owner = await contract.methods.owner().call();
 
                 // Get contract info
-                const cost = await contract.methods.cost().call();
                 const maxMintAmount = await contract.methods.maxMintAmount().call();
                 const totalSupply = await contract.methods.totalSupply().call();
                 const maxSupply = await contract.methods.maxSupply().call();
 
-                document.getElementById('cost').innerText = isWhitelisted || (Owner == account) ? "Free" : web3.utils.fromWei(cost, 'ether') + " ETH";
+                // document.getElementById('cost').innerText = "Free"
                 document.getElementById('maxMintAmount').innerText = maxMintAmount;
                 document.getElementById('totalSupply').innerText = totalSupply;
                 document.getElementById('maxSupply').innerText = maxSupply;
@@ -1063,11 +1061,6 @@
         let pre_sale = await contract.methods.check_presale().call();
         if (pre_sale && !isWhitelisted) {
             alert("You are not whitelisted!"); //if it's pre-sale, only whitelisted users are allowed to mint
-        }
-
-        if (!isWhitelisted && account != Owner) {
-            const cost = await contract.methods.cost().call();
-            totalCost = web3.utils.toBN(cost).mul(web3.utils.toBN(mintAmount));//if it's public-sale, non-whitelisted users have to pay a certain amount of ether
         }
 
         try {
@@ -1124,6 +1117,7 @@
         let tokenURI = await contract.methods.tokenURI(selectedtoken).call();
         tokenURI = tokenURI.replace("ipfs://", "");
         const jsonURI = "https://ipfs.io/ipfs/" + tokenURI;
+        debugger
         fetch(jsonURI)
             .then(response => response.json())
             .then(data => {
