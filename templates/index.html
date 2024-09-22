@@ -1115,7 +1115,6 @@
         let tokenURI = await contract.methods.tokenURI(selectedtoken).call();
         tokenURI = tokenURI.replace("ipfs://", "");
         const jsonURI = "https://ipfs.io/ipfs/" + tokenURI;
-        debugger
         fetch(jsonURI)
             .then(response => response.json())
             .then(data => {
